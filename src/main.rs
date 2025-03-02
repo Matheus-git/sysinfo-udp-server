@@ -1,5 +1,4 @@
 use serde::{Serialize, Deserialize};
-use serde_json::json;
 use std::net::SocketAddr;
 
 mod disk_info;
@@ -15,8 +14,7 @@ use socket::Socket;
 
 enum InfoType {
     Disks,
-    CPUs,
-    All
+    CPUs
 }
 
 #[derive(Serialize,Deserialize, Debug)]
@@ -32,13 +30,7 @@ fn main() -> std::io::Result<()> {
 
         let json_string_response: String = match receive_result.0.info_type {
             InfoType::Disks => disks_info_json(),
-            InfoType::CPUs => cpus_info_json(),
-            InfoType::All => {
-                let json = json!({
-                    "disks": disks_info_json(),
-                });
-                serde_json::to_string_pretty(&json).unwrap_or_else(|_| String::from("Error serializing response"))
-            }
+            InfoType::CPUs => cpus_info_json()
         };
 
         socket.send_to(receive_result.1, json_string_response);
