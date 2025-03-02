@@ -30,7 +30,7 @@ impl Socket {
     where
         T: DeserializeOwned,  
     {
-        let mut buf = [0; 1024];
+        let mut buf = [0; 60_000];
         let (number_of_bytes, source) = self.udp_socket.recv_from(&mut buf)
             .expect("Didn't receive data");
         (
